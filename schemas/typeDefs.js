@@ -39,7 +39,7 @@ const typeDefs = gql`
 //  Remember, though, that GraphQL demands that we explicitly define the type of data that is returning
 
 // -----------------------line 25 && 27--------------------------
-// the exclamation point ! after the query parameter data type definitions? That indicates that for that query to be carried out, that data must exist. Otherwise, Apollo will return an error to the client making the request and the query won't even reach the resolver function associated with it.
+// the exclamation point ! after the query parameter data type definitions? That indicates that for that query to be carried out, that data must exist. Otherwise, Apollo will return an error to the client making the request and the query won't even reach the resolver function associated with it. name and id using ! if it exist
 
 // Earlier, we didn't enforce a query parameter for thoughts because it wasn't necessary for the query to work. If there's no parameter, we simply return all thoughts. But if we want to look up a single thought or user, we need to know which one we're looking up and thus necessitate a parameter for us to look up that data.
 
