@@ -10,6 +10,7 @@ import {
   //allows us to control how the Apollo Client makes a request. Think of it like middleware for the outbound network requests.
 } from "@apollo/client";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Login from "./pages/Login";
@@ -44,8 +45,10 @@ function App() {
               <Route exact path="/" component={Home} />
               <Route exact path="/login" component={Login} />
               <Route exact path="/signup" component={Signup} />
-              <Route exact path="/profile" component={Profile} />
-              <Route exact path="/thought" component={SingleThought} />
+              {/* // The ? means this parameter is optional, so / profile and /
+              profile / myUsername will both render the Profile component. */}
+              <Route exact path="/profile/:username?" component={Profile} />
+              <Route exact path="/thought/:id" component={SingleThought} />
               <Route component={NoMatch} />
               {/* e've wrapped all of the Route components in a Switch component and
               included one more Route at the end to render the NoMatch
