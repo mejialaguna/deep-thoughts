@@ -1,22 +1,31 @@
 import React, { useState } from "react";
-import { QUERY_THOUGHTS } from "../../utils/queries";
+import { QUERY_THOUGHTS, QUERY_ME } from "../../utils/queries";
 import { useMutation } from "@apollo/client";
 import { ADD_THOUGHT } from "../../utils/mutations";
 
 const ThoughtForm = () => {
-  // this will make all new thoughts appear after they are submit it
-  const [addThought, { error }] = useMutation(ADD_THOUGHT, {
-    update(cache, { data: { addThought } }) {
-      // read what's currently in the cache
-      const { thoughts } = cache.readQuery({ query: QUERY_THOUGHTS });
+  // this will make all new thoughts appear after they are submited 
+ const [addThought, { error }] = useMutation(ADD_THOUGHT, {
+   update(cache, { data: { addThought } }) {
+     try {
+       // could potentially not exist yet, so wrap in a try...catch
+       const { thoughts } = cache.readQuery({ query: QUERY_THOUGHTS });
+       cache.writeQuery({
+         query: QUERY_THOUGHTS,
+         data: { thoughts: [addThought, ...thoughts] },
+       });
+     } catch (e) {
+       console.error(e);
+     }
 
-      // prepend the newest thought to the front of the array
-      cache.writeQuery({
-        query: QUERY_THOUGHTS,
-        data: { thoughts: [addThought, ...thoughts] },
-      });
-    },
-  });
+     // update me object's cache, appending new thought to the end of the array
+     const { me } = cache.readQuery({ query: QUERY_ME });
+     cache.writeQuery({
+       query: QUERY_ME,
+       data: { me: { ...me, thoughts: [...me.thoughts, addThought] } },
+     });
+   },
+ });
 
   const [thoughtText, setText] = useState("");
   const [characterCount, setCharacterCount] = useState(0);

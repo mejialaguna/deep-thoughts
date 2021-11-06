@@ -54,4 +54,19 @@ export const ADD_THOUGHT = gql`
     }
   }
 `;
-export default {LOGIN_USER , ADD_USER , ADD_FRIEND , ADD_THOUGHT};
+
+export const ADD_REACTION = gql`
+  mutation addReaction($thoughtId: ID!, $reactionBody: String!) {
+    addReaction(thoughtId: $thoughtId, reactionBody: $reactionBody) {
+      _id
+      reactionCount
+      reactions {
+        _id
+        reactionBody
+        createdAt
+        username
+      }
+    }
+  }
+`;
+export default {LOGIN_USER , ADD_USER , ADD_FRIEND , ADD_THOUGHT , ADD_REACTION};
