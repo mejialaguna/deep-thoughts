@@ -1,13 +1,17 @@
-import React from 'react';
+import React from "react";
 // This component, Redirect, will allow us to redirect the user to another route within the application. Think of it like how we've used location.replace() in the past, but it leverages React Router's ability to not reload the browser!
 import { Redirect, useParams } from "react-router-dom";
 import ThoughtList from "../components/ThoughtList";
-import { useQuery } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
+import { ADD_FRIEND } from "../utils/mutations";
 import { QUERY_USER, QUERY_ME } from "../utils/queries";
-import FriendList from '../components/FriendList';
+import FriendList from "../components/FriendList";
+import ThoughtForm from "../components/ThoughtForm";
 import Auth from "../utils/auth";
 
 const Profile = () => {
+  // First, we need to destructure the mutation function from ADD_FRIEND so we can use it in a click function. 
+  const [addFriend] = useMutation(ADD_FRIEND);
   const { username: userParam } = useParams();
 
   // Now if there's a value in userParam that we got from the URL bar, we'll use that value to run the QUERY_USER query. If there's no value in userParam, like if we simply visit /profile as a logged-in user, we'll execute the QUERY_ME query instead.
@@ -25,9 +29,8 @@ const Profile = () => {
     return <div>Loading...</div>;
   }
 
-
-// if you navigate to /profile and you aren't logged in? This could very easily happen 
-// by mistake and, unfortunately, the page breaks if we do !
+  // if you navigate to /profile and you aren't logged in? This could very easily happen
+  // by mistake and, unfortunately, the page breaks if we do !
   if (!user?.username) {
     return (
       <h4>
@@ -36,6 +39,16 @@ const Profile = () => {
       </h4>
     );
   }
+
+  const handleClick = async () => {
+    try {
+      await addFriend({
+        variables: { id: user._id },
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   return (
     <div>
@@ -46,7 +59,16 @@ const Profile = () => {
         <h2 className="bg-dark text-secondary p-3 display-inline-block">
           Viewing {userParam ? `${user.username}'s` : "your"} profile.
         </h2>
+
+        {userParam && ( //if there is paramas render the btn (username)
+          <button className="btn ml-auto" onClick={handleClick}>
+            Add Friend
+          </button>
+        )}
       </div>
+      
+          {/* if theres is not params (username) render toughtForm */}
+      <div className="mb-3">{!userParam && <ThoughtForm />}</div>
 
       <div className="flex-row justify-space-between mb-3">
         <div className="col-12 mb-3 col-lg-8">

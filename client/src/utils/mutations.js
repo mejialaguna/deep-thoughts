@@ -24,4 +24,19 @@ export const ADD_USER = gql`
     }
   }
 `;
-export default {LOGIN_USER , ADD_USER};
+
+
+export const ADD_FRIEND = gql`
+  mutation addFriend($id: ID!) {
+    addFriend(friendId: $id) {
+      _id
+      username
+      friendCount
+      friends {
+        _id
+        username
+      }
+    }
+  }
+`;
+export default {LOGIN_USER , ADD_USER , ADD_FRIEND};
