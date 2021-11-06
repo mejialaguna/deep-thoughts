@@ -39,4 +39,19 @@ export const ADD_FRIEND = gql`
     }
   }
 `;
-export default {LOGIN_USER , ADD_USER , ADD_FRIEND};
+
+export const ADD_THOUGHT = gql`
+  mutation addThought($thoughtText: String!) {
+    addThought(thoughtText: $thoughtText) {
+      _id
+      thoughtText
+      createdAt
+      username
+      reactionCount
+      reactions {
+        _id
+      }
+    }
+  }
+`;
+export default {LOGIN_USER , ADD_USER , ADD_FRIEND , ADD_THOUGHT};
